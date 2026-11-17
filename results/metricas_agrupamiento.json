@@ -1,0 +1,16 @@
+{
+  "k_elegido": 3,
+  "silueta_validacion": 0.2607797486963021,
+  "silueta_prueba": 0.268494867573975,
+  "variables": [
+    "Air temperature [K]",
+    "Process temperature [K]",
+    "Rotational speed [rpm]",
+    "Torque [Nm]",
+    "Tool wear [min]"
+  ],
+  "registros_entrenamiento": 6000,
+  "registros_validacion": 2000,
+  "registros_prueba": 2000,
+  "semilla": 42
+}
