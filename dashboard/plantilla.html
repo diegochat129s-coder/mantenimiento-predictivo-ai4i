@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mantenimiento predictivo · AI4I 2020</title>
+<style>
+:root{color-scheme:light;font-family:Inter,system-ui,sans-serif;color:#163047;background:#f0f5f7}
+*{box-sizing:border-box}body{margin:0}header{background:#123049;color:white;padding:2.2rem max(1rem,calc((100vw - 1000px)/2))}
+header p{color:#cce8ef;margin:.45rem 0}h1{margin:0;font-size:clamp(1.7rem,5vw,2.7rem)}h2{font-size:1.15rem;margin:0 0 .8rem}
+main{max-width:1032px;margin:auto;padding:1rem}section{background:white;border:1px solid #d7e3e9;border-radius:14px;margin-bottom:1rem;padding:1rem}
+.filters,.stats,.models{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.8rem}
+label{font-weight:600}select{display:block;width:100%;padding:.45rem;margin-top:.25rem;border:1px solid #658196;border-radius:6px;background:white;color:#163047}
+.stat{background:#e8f4f5;padding:.8rem;border-radius:9px}.stat strong{display:block;font-size:1.45rem}
+table{width:100%;border-collapse:collapse;text-align:right}th,td{padding:.55rem;border-bottom:1px solid #e0e9eb}th:first-child,td:first-child{text-align:left}
+meter{width:100%;min-width:45px;height:1rem}small{color:#476173}footer{margin-bottom:1rem}
+</style>
+</head>
+<body>
+<header><h1>Mantenimiento predictivo</h1><p>AI4I 2020 · Diego Salinas Laguna</p></header>
+<main>
+<section><h2>Explorar registros</h2>
+<div class="filters">
+<label>Tipo de producto<select id="tipo"><option value="">Todos</option><option>L</option><option>M</option><option>H</option></select></label>
+<label>Conjunto<select id="parte"><option value="">Todos</option><option value="entrenamiento">Entrenamiento</option><option value="validacion">Validación</option><option value="prueba">Prueba</option></select></label>
+</div></section>
+<section class="stats" aria-label="Resumen del filtro" aria-live="polite">
+<div class="stat">Registros<strong id="n"></strong></div>
+<div class="stat">Fallas observadas<strong id="fallas"></strong></div>
+<div class="stat">Proporción de fallas<strong id="tasa"></strong></div>
+<div class="stat">Torque promedio<strong id="torque"></strong></div>
+</section>
+<section><h2>Fallas observadas por grupo de operación</h2>
+<table><thead><tr><th>Grupo</th><th>Registros</th><th>Fallas</th><th>Proporción</th><th>Escala 0–100 %</th></tr></thead><tbody id="grupos"></tbody></table>
+<p><small>Los grupos se formaron con las mediciones de operación. Después se contó cuántas fallas había en cada uno.</small></p>
+</section>
+<section><h2>Resultados de los modelos en el conjunto de prueba</h2>
+<div class="models"><div><b>Regresión de torque</b><p id="regresion"></p></div><div><b>Clasificación de fallas</b><p id="clasificacion"></p></div><div><b>Agrupamiento</b><p id="agrupamiento"></p></div></div>
+<small>Estas métricas corresponden a la prueba completa. Los filtros solo cambian la exploración de arriba.</small>
+</section>
+<footer><small>Fuente: AI4I 2020 Predictive Maintenance Dataset, UCI. DOI 10.24432/C5HS5C. Los registros son sintéticos.</small></footer>
+</main>
+<script>
+'use strict';
+const data = /*DATOS_AI4I*/null;
+const get = id => document.getElementById(id);
+const fmt = (n, decimals = 0) => n.toLocaleString('es-MX',{minimumFractionDigits:decimals,maximumFractionDigits:decimals});
+const pct = (n, total) => total ? fmt(100*n/total,2)+' %' : '—';
+function render() {
+  const rows = data.rows.filter(row => (!get('tipo').value || row.Type === get('tipo').value)
+    && (!get('parte').value || row.particion === get('parte').value));
+  const total = {n:0, fallas:0, torque:0};
+  const groups = new Map();
+  for (const row of rows) {
+    const group = groups.get(row.grupo) || {n:0, fallas:0};
+    group.n += row.n;
+    group.fallas += row.fallas;
+    groups.set(row.grupo,group);
+    total.n += row.n;
+    total.fallas += row.fallas;
+    total.torque += row.torque;
+  }
+  get('n').textContent = fmt(total.n);
+  get('fallas').textContent = fmt(total.fallas);
+  get('tasa').textContent = pct(total.fallas,total.n);
+  get('torque').textContent = total.n ? fmt(total.torque/total.n,2)+' Nm' : '—';
+  const body = get('grupos');
+  body.replaceChildren();
+  for (const [id, group] of [...groups.entries()].sort((a,b)=>a[0]-b[0])) {
+    const tr = body.insertRow();
+    for (const value of [id,fmt(group.n),fmt(group.fallas),pct(group.fallas,group.n)]) tr.insertCell().textContent = value;
+    const meter = document.createElement('meter');
+    meter.max = 100;
+    meter.value = 100*group.fallas/group.n;
+    meter.setAttribute('aria-label','Porcentaje de fallas del grupo '+id);
+    tr.insertCell().append(meter);
+  }
+}
+const regression = data.supervisado.regresion;
+const classification = data.supervisado.clasificacion;
+const clustering = data.agrupamiento;
+get('regresion').textContent = 'Error absoluto medio: '+fmt(regression.MAE,2)+' Nm. R²: '+fmt(regression.R2,3)+'.';
+get('clasificacion').textContent = classification.matriz_confusion[1][1]+' de '+classification.matriz_confusion[1].reduce((a,b)=>a+b,0)+' fallas detectadas. F1: '+fmt(classification.F1,3)+'.';
+get('agrupamiento').textContent = clustering.k_elegido+' grupos. Silueta: '+fmt(clustering.silueta_prueba,3)+'.';
+get('tipo').addEventListener('change', render);
+get('parte').addEventListener('change', render);
+render();
+</script>
+</body>
+</html>
