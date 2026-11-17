@@ -1,0 +1,52 @@
+{
+  "regresion": {
+    "modelo": "Bosque",
+    "MAE": 3.0188933391269828,
+    "RMSE": 3.947958090905844,
+    "R2": 0.8383137448012568
+  },
+  "clasificacion": {
+    "modelo": "Bosque",
+    "umbral": 0.25000000000000006,
+    "accuracy": 0.967,
+    "precision": 0.5087719298245614,
+    "recall": 0.8529411764705882,
+    "F1": 0.6373626373626373,
+    "F2": 0.7512953367875648,
+    "AP": 0.6963622417209783,
+    "ROC_AUC": 0.9698118377785898,
+    "matriz_confusion": [
+      [
+        1876,
+        56
+      ],
+      [
+        10,
+        58
+      ]
+    ]
+  },
+  "busquedas": {
+    "regresion": {
+      "parametros": {
+        "modelo__max_depth": 8,
+        "modelo__min_samples_leaf": 1
+      },
+      "puntuacion_cv": -3.9390207758734834
+    },
+    "clasificacion": {
+      "parametros": {
+        "modelo__max_depth": null,
+        "modelo__min_samples_leaf": 1
+      },
+      "puntuacion_cv": 0.671586645788912
+    }
+  },
+  "semilla": 42,
+  "versiones": {
+    "python": "3.14.8",
+    "scikit-learn": "1.9.1",
+    "pandas": "3.0.1",
+    "numpy": "2.3.5"
+  }
+}

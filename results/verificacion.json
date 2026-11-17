@@ -1,0 +1,7 @@
+{
+  "esquema": true,
+  "integridad_sqlite": true,
+  "particiones_disjuntas": true,
+  "modelos_recargables": true,
+  "n_predicciones": 2000
+}
