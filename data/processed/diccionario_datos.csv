@@ -1,0 +1,15 @@
+﻿variable,tipo,unidad,descripcion,nulos,valores_distintos,uso
+UDI,int64,—,Identificador único del registro,0,10000,Identificador excluido
+Product ID,str,—,Identificador del producto,0,10000,Identificador excluido
+Type,str,—,Calidad del producto L baja M media H alta,0,3,Predictor
+Air temperature [K],float64,K,Temperatura del aire,0,93,Predictor
+Process temperature [K],float64,K,Temperatura del proceso,0,82,Predictor
+Rotational speed [rpm],int64,rpm,Velocidad de giro,0,941,Predictor
+Torque [Nm],float64,Nm,Torque o momento de fuerza,0,577,Predictor; objetivo en regresión
+Tool wear [min],int64,min,Desgaste acumulado en minutos,0,246,Predictor
+Machine failure,int64,0/1,Falla general observada,0,2,Objetivo clasificación
+TWF,int64,0/1,Falla por desgaste,0,2,Solo auditoría; excluir del modelo
+HDF,int64,0/1,Falla de disipación de calor,0,2,Solo auditoría; excluir del modelo
+PWF,int64,0/1,Falla de potencia,0,2,Solo auditoría; excluir del modelo
+OSF,int64,0/1,Falla por sobreesfuerzo,0,2,Solo auditoría; excluir del modelo
+RNF,int64,0/1,Falla aleatoria,0,2,Solo auditoría; excluir del modelo

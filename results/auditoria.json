@@ -1,0 +1,21 @@
+{
+  "rows": 10000,
+  "columns": 14,
+  "missing": 0,
+  "duplicate_rows": 0,
+  "duplicate_udi": 0,
+  "duplicate_predictors": 0,
+  "failure_counts": {
+    "0": 9661,
+    "1": 339
+  },
+  "sha256": "dc6630cd9b1f0f853922fad78a1b6436570d3f1ec863f1dd5c4340ac56bc8a8e",
+  "label_disagreements": 27,
+  "iqr_outlier_counts": {
+    "Air temperature [K]": 0,
+    "Process temperature [K]": 0,
+    "Rotational speed [rpm]": 418,
+    "Torque [Nm]": 69,
+    "Tool wear [min]": 0
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "entrenamiento": {
+    "n": 6000,
+    "fallas": 203
+  },
+  "prueba": {
+    "n": 2000,
+    "fallas": 68
+  },
+  "validacion": {
+    "n": 2000,
+    "fallas": 68
+  }
+}
