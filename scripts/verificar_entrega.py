@@ -17,7 +17,7 @@ from etl_sqlserver import transformar
 
 
 def main():
-    suite = unittest.defaultTestLoader.discover(str(ROOT / 'tests'), pattern='test_etl_sqlserver.py')
+    suite = unittest.defaultTestLoader.discover(str(ROOT / 'tests'), pattern='test_*.py')
     test = unittest.TextTestRunner(verbosity=2).run(suite)
     if not test.wasSuccessful():
         raise SystemExit(1)
@@ -33,6 +33,21 @@ def main():
     code = [cell for cell in notebook.cells if cell.cell_type == 'code']
     assert len(code) == 6 and all(cell.execution_count is not None for cell in code)
     assert not any(item.output_type == 'error' for cell in code for item in cell.outputs)
+    required_powerbi = [
+        'Mantenimiento.pbip', 'Mantenimiento.SemanticModel/definition.pbism',
+        'Mantenimiento.SemanticModel/model.bim', 'Mantenimiento.Report/definition.pbir',
+        'Mantenimiento.Report/definition/version.json',
+        'Mantenimiento.Report/definition/report.json',
+        'Mantenimiento.Report/definition/pages/pages.json',
+        'Mantenimiento.Report/definition/pages/operacion/page.json',
+    ]
+    for relative in required_powerbi:
+        path = ROOT / 'powerbi' / relative
+        assert path.is_file(), f'Falta archivo obligatorio: {relative}'
+        json.loads(path.read_text(encoding='utf-8'))
+    version = json.loads((ROOT / 'powerbi/Mantenimiento.Report/definition/version.json').read_text(encoding='utf-8'))
+    assert version['version'] == '2.0.0'
+    assert version['$schema'].endswith('/definition/versionMetadata/1.0.0/schema.json')
     model = json.loads((ROOT / 'powerbi/Mantenimiento.SemanticModel/model.bim').read_text(encoding='utf-8'))['model']
     tables = {t['name']: t for t in model['tables']}
     assert len(tables) == 4 and len(model['relationships']) == 3
@@ -67,6 +82,7 @@ foreach($file in (Get-ChildItem scripts,ssis -Recurse -Filter *.ps1)) {
         'notebook_celdas_ejecutadas_sin_error': len(code),
         'powershell_archivos_sintaxis_correcta': powershell_count,
         'tablas_powerbi': len(tables), 'relaciones_powerbi': 3, 'visuales_powerbi': len(visuals),
+        'powerbi_archivos_obligatorios_presentes': len(required_powerbi),
         'validacion_powerbi_en_este_script': 'Referencias de campos y relaciones; no apertura de Desktop.',
         'sha256_original': raw_hash, 'filas_procesadas': len(frame),
         'fallas': int(frame.estado_id.sum()), 'dias_simulados_utilizados': int(frame.tiempo_id.nunique()),

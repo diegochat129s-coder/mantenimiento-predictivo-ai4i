@@ -114,6 +114,10 @@ def generate(server, database, root=ROOT):
         'version': '4.0', 'datasetReference': {'byPath': {'path': '../Mantenimiento.SemanticModel'}},
     })
     definition = report_folder / 'definition'
+    write_json(definition / 'version.json', {
+        '$schema': BASE_SCHEMA + 'item/report/definition/versionMetadata/1.0.0/schema.json',
+        'version': '2.0.0',
+    })
     write_json(definition / 'report.json', {
         '$schema': BASE_SCHEMA + 'item/report/definition/report/2.0.0/schema.json',
         'themeCollection': {'baseTheme': {'name': 'CY24SU06', 'reportVersionAtImport': '5.55', 'type': 'SharedResources'}},
