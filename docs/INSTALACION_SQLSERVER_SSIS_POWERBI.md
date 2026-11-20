@@ -4,7 +4,15 @@
 
 Se comprobaron la transformación en Python, sus pruebas automáticas, la sintaxis de PowerShell y los esquemas JSON del proyecto Power BI. Se prepararon los scripts SQL y el generador del paquete SSIS.
 
-En el equipo revisado no se encontraron instalaciones estándar del motor SQL Server, el runtime de SSIS, Visual Studio con Integration Services ni Power BI Desktop. Por eso **todavía no se ejecutó el procedimiento SQL, no se generó ni abrió el paquete .dtsx y no se abrió ni actualizó el informe en Power BI**. La validación JSON no sustituye esa prueba de apertura. El archivo de verificación SQL solo se crea después de una carga real correcta.
+Después de la instalación guiada, el usuario se conectó a `localhost` en SSMS. Se configuró el proyecto con autenticación de Windows y se generó y releyó `ssis/AI4I_Carga_Full.dtsx` usando el runtime de SSIS 17; contiene cinco tareas y cuatro conexiones de precedencia. **La carga SQL y la ejecución del paquete aún no están verificadas**, y el informe tampoco se ha abierto ni actualizado en Power BI. El controlador SQL de .NET Framework impide iniciar la carga desde el AppContainer del asistente (contadores de rendimiento no permitidos); debe ejecutarse desde una terminal normal de Windows. El archivo de verificación SQL solo se crea después de una carga real correcta.
+
+La configuración local ya existe para `localhost`. Para continuar ahora, ejecutar en PowerShell fuera de SSMS:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "C:\Users\diego\AppData\Local\Temp\AI4I_GitHub_20261116\scripts\sqlserver\Datamart.ps1" -Paso Todo
+```
+
+La política se aplica únicamente a ese proceso, sin cambiar la configuración permanente de Windows. El paquete generado emplea la misma opción para sus scripts revisados. Si se necesita regenerar el paquete desde una terminal con scripts restringidos, usar `powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\ssis\Crear_Paquete.ps1`.
 
 ## Programas necesarios
 

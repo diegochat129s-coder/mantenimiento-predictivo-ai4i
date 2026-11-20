@@ -2,28 +2,29 @@
 param(
     [ValidateSet('Inicializar','Staging','Publicar','Verificar','Todo')]
     [string]$Paso = 'Todo',
-    [string]$Config = (Join-Path $PSScriptRoot '..\..\config\sqlserver.local.json'),
+    [string]$Config = '',
     [string]$CargaId = ''
 )
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 $root = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\..'))
+if (-not $Config) { $Config = Join-Path $root 'config\sqlserver.local.json' }
 if (-not (Test-Path -LiteralPath $Config)) { throw "Configura el servidor en $Config" }
 $settings = Get-Content -LiteralPath $Config -Raw -Encoding UTF8 | ConvertFrom-Json
 if ($settings.base -notmatch '^[A-Za-z][A-Za-z0-9_]{0,63}$') { throw 'Nombre de base inválido.' }
 if ($settings.base -in @('master','model','msdb','tempdb')) { throw 'Se requiere una base de proyecto.' }
 Add-Type -AssemblyName System.Data
 $builder = New-Object System.Data.SqlClient.SqlConnectionStringBuilder
-$builder.DataSource = $settings.servidor
-$builder.IntegratedSecurity = $true
-$builder.Encrypt = [bool]$settings.cifrar
-$builder.TrustServerCertificate = [bool]$settings.confiar_certificado_local
-$builder.ConnectTimeout = 15
-if ($builder.TrustServerCertificate -and $settings.servidor -notmatch '^(\.|localhost|127\.0\.0\.1)(\\[^;]+)?$') {
+$builder['Data Source'] = $settings.servidor
+$builder['Integrated Security'] = $true
+$builder['Encrypt'] = [bool]$settings.cifrar
+$builder['TrustServerCertificate'] = [bool]$settings.confiar_certificado_local
+$builder['Connect Timeout'] = 15
+if ($builder['TrustServerCertificate'] -and $settings.servidor -notmatch '^(\.|localhost|127\.0\.0\.1)(\\[^;]+)?$') {
     throw 'La confianza explícita en un certificado de desarrollo se limita al servidor local.'
 }
 function Open-Database([string]$Database) {
-    $builder.InitialCatalog = $Database
+    $builder['Initial Catalog'] = $Database
     $connection = New-Object System.Data.SqlClient.SqlConnection $builder.ConnectionString
     $connection.Open()
     return $connection

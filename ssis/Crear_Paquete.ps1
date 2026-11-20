@@ -1,17 +1,18 @@
 ﻿[CmdletBinding()]
 param(
-    [string]$Config = (Join-Path $PSScriptRoot '..\config\sqlserver.local.json'),
+    [string]$Config = '',
     [string]$ManagedDts = ''
 )
 $ErrorActionPreference = 'Stop'
 $root = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
+if (-not $Config) { $Config = Join-Path $root 'config\sqlserver.local.json' }
 if ($PSVersionTable.PSEdition -eq 'Core') { throw 'Ejecuta este archivo con Windows PowerShell 5.1 (powershell.exe).' }
 if (-not (Test-Path -LiteralPath $Config)) { throw 'Primero crea config/sqlserver.local.json.' }
 $settings = Get-Content -LiteralPath $Config -Raw -Encoding UTF8 | ConvertFrom-Json
 $python = (Get-Command $settings.python -ErrorAction Stop).Source
 if (-not $ManagedDts) {
     $candidates = @()
-    foreach ($folder in @("$env:ProgramFiles\Microsoft SQL Server","${env:ProgramFiles(x86)}\Microsoft SQL Server")) {
+    foreach ($folder in @("$env:ProgramFiles\Microsoft SQL Server","${env:ProgramFiles(x86)}\Microsoft SQL Server","$env:SystemRoot\Microsoft.NET\assembly\GAC_MSIL\Microsoft.SqlServer.ManagedDTS")) {
         if (Test-Path -LiteralPath $folder) {
             $candidates += Get-ChildItem -LiteralPath $folder -Filter Microsoft.SqlServer.ManagedDTS.dll -Recurse -ErrorAction SilentlyContinue
         }
@@ -31,11 +32,11 @@ $application = New-Object Microsoft.SqlServer.Dts.Runtime.Application
 $ps = Join-Path $env:SystemRoot 'System32\WindowsPowerShell\v1.0\powershell.exe'
 $runner = Join-Path $root 'scripts\sqlserver\Datamart.ps1'
 $specs = @(
-    @{Name='Preparar tablas y procedimiento'; Exe=$ps; Args="-NoProfile -File `"$runner`" -Paso Inicializar -Config `"$Config`""},
+    @{Name='Preparar tablas y procedimiento'; Exe=$ps; Args="-NoProfile -ExecutionPolicy Bypass -File `"$runner`" -Paso Inicializar -Config `"$Config`""},
     @{Name='Extraer CSV y transformar fechas'; Exe=$python; Args="`"$(Join-Path $root 'src\etl_sqlserver.py')`" --raiz `"$root`""},
-    @{Name='Cargar staging con SqlBulkCopy'; Exe=$ps; Args="-NoProfile -File `"$runner`" -Paso Staging -Config `"$Config`""},
-    @{Name='Publicar modelo estrella FULL'; Exe=$ps; Args="-NoProfile -File `"$runner`" -Paso Publicar -Config `"$Config`""},
-    @{Name='Verificar conteos y ejecución'; Exe=$ps; Args="-NoProfile -File `"$runner`" -Paso Verificar -Config `"$Config`""}
+    @{Name='Cargar staging con SqlBulkCopy'; Exe=$ps; Args="-NoProfile -ExecutionPolicy Bypass -File `"$runner`" -Paso Staging -Config `"$Config`""},
+    @{Name='Publicar modelo estrella FULL'; Exe=$ps; Args="-NoProfile -ExecutionPolicy Bypass -File `"$runner`" -Paso Publicar -Config `"$Config`""},
+    @{Name='Verificar conteos y ejecución'; Exe=$ps; Args="-NoProfile -ExecutionPolicy Bypass -File `"$runner`" -Paso Verificar -Config `"$Config`""}
 )
 $previous = $null
 foreach ($spec in $specs) {

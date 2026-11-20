@@ -9,7 +9,7 @@
       {
         "name": "ServidorSQL",
         "kind": "m",
-        "expression": "\".\\SQLEXPRESS\" meta [IsParameterQuery=true, Type=\"Text\", IsParameterQueryRequired=true]"
+        "expression": "\"localhost\" meta [IsParameterQuery=true, Type=\"Text\", IsParameterQueryRequired=true]"
       },
       {
         "name": "BaseDatosSQL",

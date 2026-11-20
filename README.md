@@ -22,7 +22,7 @@ Las fechas son **simuladas**: 50 observaciones por día desde el 1 de enero de 2
 | Pruebas de transformación | `tests/test_etl_sqlserver.py` |
 | Informe de arquitectura y estado | [PDF](docs/Informe_SQLServer_SSIS_PowerBI.pdf) |
 
-**Estado:** preparación Python comprobada y estructura Power BI validada. La ejecución del procedimiento en SQL Server, la generación/ejecución de SSIS y la apertura/actualización de Power BI siguen pendientes de disponer de esos programas y configurar una instancia real. El `.dtsx` se genera localmente mediante el SDK de SSIS. El paquete coordina tareas Execute Process con Python y PowerShell/SqlBulkCopy; no usa componentes de Data Flow.
+**Estado:** preparación Python comprobada, estructura Power BI validada y paquete `ssis/AI4I_Carga_Full.dtsx` generado y releído con el runtime de SSIS 17. Se configuró la instancia `localhost` con autenticación de Windows. La carga SQL, la ejecución del paquete y la apertura/actualización de Power BI siguen pendientes. El controlador SQL de .NET Framework rechaza ejecutarse dentro del AppContainer del asistente; la carga debe iniciarse desde la terminal normal del usuario, siguiendo la guía de instalación. El paquete coordina tareas Execute Process con Python y PowerShell/SqlBulkCopy; no usa componentes de Data Flow.
 
 Para repetir las comprobaciones locales: `python scripts/verificar_entrega.py`. Esta verificación comprueba Python, los archivos derivados, la sintaxis de PowerShell y las relaciones del proyecto Power BI; no sustituye la ejecución de SQL Server/SSIS/Desktop.
 

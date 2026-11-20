@@ -48,7 +48,7 @@ def generate():
     with PdfPages(output) as pdf:
         fig, ax = page('Modelo estrella y Data Mart', 1)
         y = paragraph(ax, .80, 'Objetivo: organizar las observaciones de operación industrial para explorar condiciones, describir fallas y facilitar su consulta en Power BI.')
-        paragraph(ax, y, 'Estado: transformación Python ejecutada, pruebas aprobadas y estructura de archivos Power BI validada. La ejecución en SQL Server, la generación y ejecución del paquete SSIS y la apertura en Power BI permanecen pendientes de instalación y configuración.')
+        paragraph(ax, y, 'Estado: transformación Python ejecutada, pruebas aprobadas y estructura Power BI validada. El paquete SSIS ya se generó y releyó con cinco tareas. La carga SQL, la ejecución del paquete y la apertura del informe en Power BI siguen pendientes. La conexión local está configurada para localhost.')
         box(ax, .34, .48, .32, .12, 'dm.dim_tiempo', ['tiempo_id (PK), fecha', 'año, mes, día, simulación'])
         box(ax, .08, .25, .23, .14, 'dm.dim_tipo', ['tipo_id (PK)', 'L, M, H / calidad'])
         box(ax, .35, .23, .30, .18, 'dm.fact_operacion', ['udi (PK), tres claves (FK)', 'temperaturas, velocidad', 'torque, desgaste y fallas'])

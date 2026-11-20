@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="11/20/2026 3:52:09 AM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="ALEXANDERGHOST"
+  DTS:CreatorName="ALEXANDERGHOST\diego"
+  DTS:Description="CSV AI4I, fechas simuladas, staging, publicación FULL transaccional y verificación."
+  DTS:DTSID="{683C1AAB-683F-4F93-B2D4-5A08745106D5}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="17.0.1000.7"
+  DTS:LocaleID="2057"
+  DTS:MaxConcurrentExecutables="1"
+  DTS:ObjectName="AI4I_Carga_Full"
+  DTS:ProtectionLevel="0"
+  DTS:VersionGUID="{C1004293-D1A6-40E9-B4E8-BA8A1B2F28CB}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Cargar staging con SqlBulkCopy"
+      DTS:CreationName="Microsoft.ExecuteProcess"
+      DTS:DTSID="{E5174BB5-9189-46CB-B63E-4158E5E0056C}"
+      DTS:ExecutableType="Microsoft.ExecuteProcess"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Cargar staging con SqlBulkCopy"
+      DTS:TaskContact="Execute Process Task;Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:PropertyExpression
+        DTS:Name="Arguments">"-NoProfile -ExecutionPolicy Bypass -File \"C:\\Users\\diego\\AppData\\Local\\Temp\\AI4I_GitHub_20261116\\scripts\\sqlserver\\Datamart.ps1\" -Paso Staging -Config \"C:\\Users\\diego\\AppData\\Local\\Temp\\AI4I_GitHub_20261116\\config\\sqlserver.local.json\" -CargaId " + @[System::ExecutionInstanceGUID]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <ExecuteProcessData
+          Executable="C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"
+          Arguments="-NoProfile -ExecutionPolicy Bypass -File &quot;C:\Users\diego\AppData\Local\Temp\AI4I_GitHub_20261116\scripts\sqlserver\Datamart.ps1&quot; -Paso Staging -Config &quot;C:\Users\diego\AppData\Local\Temp\AI4I_GitHub_20261116\config\sqlserver.local.json&quot; -CargaId {976A9B43-73FA-41F7-B1AA-00DFF94D2627}"
+          WorkingDirectory="C:\Users\diego\AppData\Local\Temp\AI4I_GitHub_20261116"
+          TimeOut="900" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Extraer CSV y transformar fechas"
+      DTS:CreationName="Microsoft.ExecuteProcess"
+      DTS:DTSID="{3FF28F2A-4CF3-4431-8ACE-C0D16BE65F4C}"
+      DTS:ExecutableType="Microsoft.ExecuteProcess"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Extraer CSV y transformar fechas"
+      DTS:TaskContact="Execute Process Task;Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:PropertyExpression
+        DTS:Name="Arguments">"\"C:\\Users\\diego\\AppData\\Local\\Temp\\AI4I_GitHub_20261116\\src\\etl_sqlserver.py\" --raiz \"C:\\Users\\diego\\AppData\\Local\\Temp\\AI4I_GitHub_20261116\" --carga-id " + @[System::ExecutionInstanceGUID]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <ExecuteProcessData
+          Executable="C:\Users\diego\AppData\Local\Python\pythoncore-3.14-64\python.exe"
+          Arguments="&quot;C:\Users\diego\AppData\Local\Temp\AI4I_GitHub_20261116\src\etl_sqlserver.py&quot; --raiz &quot;C:\Users\diego\AppData\Local\Temp\AI4I_GitHub_20261116&quot; --carga-id {976A9B43-73FA-41F7-B1AA-00DFF94D2627}"
+          WorkingDirectory="C:\Users\diego\AppData\Local\Temp\AI4I_GitHub_20261116"
+          TimeOut="900" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Preparar tablas y procedimiento"
+      DTS:CreationName="Microsoft.ExecuteProcess"
+      DTS:DTSID="{E497C1B5-C702-4AA1-9200-C582F4606C02}"
+      DTS:ExecutableType="Microsoft.ExecuteProcess"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Preparar tablas y procedimiento"
+      DTS:TaskContact="Execute Process Task;Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <ExecuteProcessData
+          Executable="C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"
+          Arguments="-NoProfile -ExecutionPolicy Bypass -File &quot;C:\Users\diego\AppData\Local\Temp\AI4I_GitHub_20261116\scripts\sqlserver\Datamart.ps1&quot; -Paso Inicializar -Config &quot;C:\Users\diego\AppData\Local\Temp\AI4I_GitHub_20261116\config\sqlserver.local.json&quot;"
+          WorkingDirectory="C:\Users\diego\AppData\Local\Temp\AI4I_GitHub_20261116"
+          TimeOut="900" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Publicar modelo estrella FULL"
+      DTS:CreationName="Microsoft.ExecuteProcess"
+      DTS:DTSID="{E88CD775-A4C6-479D-B5FC-3989FE1D391C}"
+      DTS:ExecutableType="Microsoft.ExecuteProcess"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Publicar modelo estrella FULL"
+      DTS:TaskContact="Execute Process Task;Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:PropertyExpression
+        DTS:Name="Arguments">"-NoProfile -ExecutionPolicy Bypass -File \"C:\\Users\\diego\\AppData\\Local\\Temp\\AI4I_GitHub_20261116\\scripts\\sqlserver\\Datamart.ps1\" -Paso Publicar -Config \"C:\\Users\\diego\\AppData\\Local\\Temp\\AI4I_GitHub_20261116\\config\\sqlserver.local.json\" -CargaId " + @[System::ExecutionInstanceGUID]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <ExecuteProcessData
+          Executable="C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"
+          Arguments="-NoProfile -ExecutionPolicy Bypass -File &quot;C:\Users\diego\AppData\Local\Temp\AI4I_GitHub_20261116\scripts\sqlserver\Datamart.ps1&quot; -Paso Publicar -Config &quot;C:\Users\diego\AppData\Local\Temp\AI4I_GitHub_20261116\config\sqlserver.local.json&quot; -CargaId {976A9B43-73FA-41F7-B1AA-00DFF94D2627}"
+          WorkingDirectory="C:\Users\diego\AppData\Local\Temp\AI4I_GitHub_20261116"
+          TimeOut="900" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Verificar conteos y ejecución"
+      DTS:CreationName="Microsoft.ExecuteProcess"
+      DTS:DTSID="{18B844ED-D7A8-4BB3-BEF4-375DD688BC57}"
+      DTS:ExecutableType="Microsoft.ExecuteProcess"
+      DTS:FailPackageOnFailure="True"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Verificar conteos y ejecución"
+      DTS:TaskContact="Execute Process Task;Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:PropertyExpression
+        DTS:Name="Arguments">"-NoProfile -ExecutionPolicy Bypass -File \"C:\\Users\\diego\\AppData\\Local\\Temp\\AI4I_GitHub_20261116\\scripts\\sqlserver\\Datamart.ps1\" -Paso Verificar -Config \"C:\\Users\\diego\\AppData\\Local\\Temp\\AI4I_GitHub_20261116\\config\\sqlserver.local.json\" -CargaId " + @[System::ExecutionInstanceGUID]</DTS:PropertyExpression>
+      <DTS:ObjectData>
+        <ExecuteProcessData
+          Executable="C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"
+          Arguments="-NoProfile -ExecutionPolicy Bypass -File &quot;C:\Users\diego\AppData\Local\Temp\AI4I_GitHub_20261116\scripts\sqlserver\Datamart.ps1&quot; -Paso Verificar -Config &quot;C:\Users\diego\AppData\Local\Temp\AI4I_GitHub_20261116\config\sqlserver.local.json&quot; -CargaId {976A9B43-73FA-41F7-B1AA-00DFF94D2627}"
+          WorkingDirectory="C:\Users\diego\AppData\Local\Temp\AI4I_GitHub_20261116"
+          TimeOut="900" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[{1DB6BFAC-7371-4AF0-9039-3D5E7748BE86\}]"
+      DTS:CreationName=""
+      DTS:DTSID="{1DB6BFAC-7371-4AF0-9039-3D5E7748BE86}"
+      DTS:From="Package\Preparar tablas y procedimiento"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="{1DB6BFAC-7371-4AF0-9039-3D5E7748BE86}"
+      DTS:To="Package\Extraer CSV y transformar fechas" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[{4B034101-376E-4AAF-926F-43FFF4D0D748\}]"
+      DTS:CreationName=""
+      DTS:DTSID="{4B034101-376E-4AAF-926F-43FFF4D0D748}"
+      DTS:From="Package\Publicar modelo estrella FULL"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="{4B034101-376E-4AAF-926F-43FFF4D0D748}"
+      DTS:To="Package\Verificar conteos y ejecución" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[{526BE8F0-26BC-4975-99F9-527B0572B526\}]"
+      DTS:CreationName=""
+      DTS:DTSID="{526BE8F0-26BC-4975-99F9-527B0572B526}"
+      DTS:From="Package\Cargar staging con SqlBulkCopy"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="{526BE8F0-26BC-4975-99F9-527B0572B526}"
+      DTS:To="Package\Publicar modelo estrella FULL" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[{FA7DD5E5-014C-4D99-A0D0-672ACEC1437F\}]"
+      DTS:CreationName=""
+      DTS:DTSID="{FA7DD5E5-014C-4D99-A0D0-672ACEC1437F}"
+      DTS:From="Package\Extraer CSV y transformar fechas"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="{FA7DD5E5-014C-4D99-A0D0-672ACEC1437F}"
+      DTS:To="Package\Cargar staging con SqlBulkCopy" />
+  </DTS:PrecedenceConstraints>
+</DTS:Executable>
