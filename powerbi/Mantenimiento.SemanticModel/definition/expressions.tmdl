@@ -1,0 +1,9 @@
+expression ServidorSQL = "localhost" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: 1d8a2269-65a5-4cad-a324-2726008760bf
+
+	annotation PBI_ResultType = Text
+
+expression BaseDatosSQL = "MantenimientoPredictivoDM" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: 9c7b56b7-1a89-45c8-98db-3924fa82b742
+
+	annotation PBI_ResultType = Text

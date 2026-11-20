@@ -22,7 +22,9 @@ Las fechas son **simuladas**: 50 observaciones por día desde el 1 de enero de 2
 | Pruebas de transformación | `tests/test_etl_sqlserver.py` |
 | Informe de arquitectura y estado | [PDF](docs/Informe_SQLServer_SSIS_PowerBI.pdf) |
 
-**Estado:** preparación Python comprobada, estructura Power BI validada y paquete `ssis/AI4I_Carga_Full.dtsx` generado y releído con el runtime de SSIS 17. Se configuró la instancia `localhost` con autenticación de Windows. La carga SQL, la ejecución del paquete y la apertura/actualización de Power BI siguen pendientes. El controlador SQL de .NET Framework rechaza ejecutarse dentro del AppContainer del asistente; la carga debe iniciarse desde la terminal normal del usuario, siguiendo la guía de instalación. El paquete coordina tareas Execute Process con Python y PowerShell/SqlBulkCopy; no usa componentes de Data Flow.
+**Estado actualizado, 20 de noviembre de 2026:** carga SQL Server comprobada con 10,000 observaciones, 339 fallas, 200 días simulados con datos y calendario de 365 días. Power BI Desktop abierto y totales revisados mediante captura: 10 mil observaciones, 339 fallas, 3.39 % y torque promedio de 39.99 Nm. Desktop guardó el modelo en formato TMDL, incluyendo tablas de fecha automáticas adicionales a las cuatro tablas de negocio. La ejecución de SSIS no se declara comprobada y su evidencia se omite en esta entrega. El paquete preparado coordina tareas Execute Process con Python y PowerShell/SqlBulkCopy; no usa componentes de Data Flow.
+
+**Informe y capturas finales:** [Word](reports/Informe_Final_Mantenimiento_Predictivo.docx), [modelo estrella](docs/evidencias/modelo_estrella.png), [Power BI](docs/evidencias/powerbi_totales.png) y [alcance de las evidencias](docs/evidencias/README.md).
 
 Para repetir las comprobaciones locales: `python scripts/verificar_entrega.py`. Esta verificación comprueba Python, los archivos derivados, la sintaxis de PowerShell y las relaciones del proyecto Power BI; no sustituye la ejecución de SQL Server/SSIS/Desktop.
 

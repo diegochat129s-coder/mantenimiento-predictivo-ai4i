@@ -1,0 +1,29 @@
+table dim_tipo
+	lineageTag: 50231bf9-1f4a-4ab3-a02a-251223d1e610
+
+	column tipo_id
+		dataType: int64
+		lineageTag: 1c1f4048-9487-4ac5-9bc1-e2474bccd6c2
+		summarizeBy: none
+		sourceColumn: tipo_id
+
+	column tipo
+		dataType: string
+		lineageTag: a09870e0-3910-4adc-9ece-d3cdfea65840
+		summarizeBy: none
+		sourceColumn: tipo
+
+	column calidad
+		dataType: string
+		lineageTag: 226f315c-0c9d-4ba2-a786-06b8e946bbef
+		summarizeBy: none
+		sourceColumn: calidad
+
+	partition dim_tipo = m
+		mode: import
+		source =
+				let
+				    Origen = Sql.Database(ServidorSQL, BaseDatosSQL, [CreateNavigationProperties=false]),
+				    Tabla = Origen{[Schema="dm",Item="dim_tipo"]}[Data]
+				in
+				    Tabla

@@ -1,0 +1,23 @@
+table dim_estado
+	lineageTag: 845df330-a7ef-4fd0-9b42-292c7bae3db7
+
+	column estado_id
+		dataType: int64
+		lineageTag: 5daf9700-dc36-43cd-ba36-07dd93505ce9
+		summarizeBy: none
+		sourceColumn: estado_id
+
+	column descripcion
+		dataType: string
+		lineageTag: 24bc8418-f797-4613-8584-250122919a1a
+		summarizeBy: none
+		sourceColumn: descripcion
+
+	partition dim_estado = m
+		mode: import
+		source =
+				let
+				    Origen = Sql.Database(ServidorSQL, BaseDatosSQL, [CreateNavigationProperties=false]),
+				    Tabla = Origen{[Schema="dm",Item="dim_estado"]}[Data]
+				in
+				    Tabla

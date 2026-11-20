@@ -1,0 +1,91 @@
+/// Calendario 2026. Fechas de operación simuladas: 50 observaciones por día desde el 1 de enero.
+table dim_tiempo
+	lineageTag: d1332fbf-d86a-4c3c-a0d2-1d8ec2c34828
+	dataCategory: Time
+
+	column tiempo_id
+		dataType: int64
+		lineageTag: 9c63c4e0-ccb3-4df1-8a55-a7b1ab0bcaee
+		summarizeBy: none
+		sourceColumn: tiempo_id
+
+	column fecha
+		dataType: dateTime
+		isKey
+		formatString: dd/MM/yyyy
+		lineageTag: 8a6b3e6a-bf82-4de6-b4f7-03a34b461118
+		summarizeBy: none
+		sourceColumn: fecha
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column anio
+		dataType: int64
+		lineageTag: 8868ed91-b9a6-4bc5-b05a-6c36a486813c
+		summarizeBy: none
+		sourceColumn: anio
+
+	column trimestre
+		dataType: int64
+		lineageTag: 2d3562a2-3b37-41b1-88df-c6d1adaf9d38
+		summarizeBy: none
+		sourceColumn: trimestre
+
+	column mes
+		dataType: int64
+		lineageTag: 9d7c4361-c2f5-41b3-80ea-e710683b1c35
+		summarizeBy: none
+		sourceColumn: mes
+
+	column mes_nombre
+		dataType: string
+		lineageTag: ae241ba4-958f-4063-be86-2b1affce1a35
+		summarizeBy: none
+		sourceColumn: mes_nombre
+		sortByColumn: mes
+
+	column anio_mes
+		dataType: string
+		lineageTag: cadcb93c-dbb5-4859-8d92-d2e4157d84ce
+		summarizeBy: none
+		sourceColumn: anio_mes
+
+	column dia
+		dataType: int64
+		lineageTag: 107c6e23-77dc-462e-ac8e-8e4253870c25
+		summarizeBy: none
+		sourceColumn: dia
+
+	column dia_semana
+		dataType: int64
+		lineageTag: 6f641ffa-fbee-4f19-a704-3c27c6f37d60
+		summarizeBy: none
+		sourceColumn: dia_semana
+
+	column dia_nombre
+		dataType: string
+		lineageTag: 6ca32dc6-bb8f-404f-9dd2-1dd3c0c28c48
+		summarizeBy: none
+		sourceColumn: dia_nombre
+		sortByColumn: dia_semana
+
+	column es_fin_semana
+		dataType: boolean
+		lineageTag: db38e260-351f-4140-af84-a86c3e8ac523
+		summarizeBy: none
+		sourceColumn: es_fin_semana
+
+	column es_fecha_simulada
+		dataType: boolean
+		lineageTag: cd5f5f03-0739-48bb-bf46-13b6af635e33
+		summarizeBy: none
+		sourceColumn: es_fecha_simulada
+
+	partition dim_tiempo = m
+		mode: import
+		source =
+				let
+				    Origen = Sql.Database(ServidorSQL, BaseDatosSQL, [CreateNavigationProperties=false]),
+				    Tabla = Origen{[Schema="dm",Item="dim_tiempo"]}[Data]
+				in
+				    Tabla

@@ -1,0 +1,16 @@
+relationship operacion_tipo
+	fromColumn: fact_operacion.tipo_id
+	toColumn: dim_tipo.tipo_id
+
+relationship operacion_estado
+	fromColumn: fact_operacion.estado_id
+	toColumn: dim_estado.estado_id
+
+relationship operacion_tiempo
+	fromColumn: fact_operacion.tiempo_id
+	toColumn: dim_tiempo.tiempo_id
+
+relationship 27562066-563d-4743-b759-2f71ebd302ca
+	joinOnDateBehavior: datePartOnly
+	fromColumn: fact_operacion.fecha_carga_utc
+	toColumn: LocalDateTable_c22efb04-1225-4f3d-9eeb-4a11b57cac3b.Date

@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
   "name": "fallas_mes",
   "position": {
     "x": 20,
     "y": 145,
     "z": 0,
-    "width": 780,
     "height": 300,
+    "width": 780,
     "tabOrder": 0
   },
   "visual": {
@@ -27,7 +27,8 @@
                 }
               },
               "queryRef": "dim_tiempo.anio_mes",
-              "nativeQueryRef": "anio_mes"
+              "nativeQueryRef": "anio_mes",
+              "active": true
             }
           ]
         },

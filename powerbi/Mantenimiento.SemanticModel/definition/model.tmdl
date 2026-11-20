@@ -1,0 +1,20 @@
+model Model
+	culture: es-MX
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: es-MX
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["fact_operacion","dim_tipo","dim_estado","dim_tiempo","ServidorSQL","BaseDatosSQL"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table fact_operacion
+ref table dim_tipo
+ref table dim_estado
+ref table dim_tiempo
+ref table DateTableTemplate_1b51c459-4096-44c6-947e-869c163d9de5
+ref table LocalDateTable_c22efb04-1225-4f3d-9eeb-4a11b57cac3b

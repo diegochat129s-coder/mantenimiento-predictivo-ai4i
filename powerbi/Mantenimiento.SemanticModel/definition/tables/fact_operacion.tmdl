@@ -1,0 +1,154 @@
+table fact_operacion
+	lineageTag: d5150ea7-f06d-42ed-9e3d-334015c08b7c
+
+	measure Observaciones = COUNTROWS(fact_operacion)
+		formatString: #,0
+		lineageTag: 32c10817-ecb5-4a87-ba3d-6963d4d6aa9b
+
+	measure Fallas = SUM(fact_operacion[estado_id])
+		formatString: #,0
+		lineageTag: 327eb7cd-5a3f-48fb-afa2-c666de22449e
+
+	measure 'Porcentaje de fallas' = DIVIDE([Fallas], [Observaciones], 0)
+		formatString: 0.00%
+		lineageTag: e8325203-9426-40b0-8eb8-fd4873aadb37
+
+	measure 'Torque promedio' = AVERAGE(fact_operacion[torque_nm])
+		formatString: 0.00 "Nm"
+		lineageTag: 595a7d5a-8c99-4545-b322-6a069d8ea951
+
+	measure 'Desgaste promedio' = AVERAGE(fact_operacion[tool_wear_min])
+		formatString: 0.00 "min"
+		lineageTag: 7f3ab196-453a-4660-9a90-71b2bbe977be
+
+	measure 'Temperatura promedio' = AVERAGE(fact_operacion[process_temperature_k])
+		formatString: 0.00 "K"
+		lineageTag: a2b3714e-c827-4a2b-a2b3-c1216dbd0a4d
+
+	column udi
+		dataType: int64
+		lineageTag: 74b19494-c83f-4ed4-b91b-03e1f4ab639e
+		summarizeBy: sum
+		sourceColumn: udi
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_id
+		dataType: string
+		lineageTag: d0e210f3-1775-435a-84f7-1f596fec2043
+		summarizeBy: none
+		sourceColumn: product_id
+
+	column tipo_id
+		dataType: int64
+		lineageTag: dd6aac25-f21d-4f35-a259-ac4be271adba
+		summarizeBy: none
+		sourceColumn: tipo_id
+
+	column estado_id
+		dataType: int64
+		lineageTag: adc8ef0f-e5be-4432-ae21-013fb9b215b6
+		summarizeBy: none
+		sourceColumn: estado_id
+
+	column tiempo_id
+		dataType: int64
+		lineageTag: 5b146971-c1c0-4d4d-b1b4-a509d222ee46
+		summarizeBy: none
+		sourceColumn: tiempo_id
+
+	column air_temperature_k
+		dataType: double
+		lineageTag: 2849e27f-d449-4323-a00d-cdf158e6fa1a
+		summarizeBy: sum
+		sourceColumn: air_temperature_k
+
+		annotation SummarizationSetBy = Automatic
+
+	column process_temperature_k
+		dataType: double
+		lineageTag: b18658c9-c4e5-4129-8f6f-3acb18ec3244
+		summarizeBy: sum
+		sourceColumn: process_temperature_k
+
+		annotation SummarizationSetBy = Automatic
+
+	column torque_nm
+		dataType: double
+		lineageTag: 343b5c88-b730-4e3b-8f64-45e5fd998d13
+		summarizeBy: sum
+		sourceColumn: torque_nm
+
+		annotation SummarizationSetBy = Automatic
+
+	column rotational_speed_rpm
+		dataType: int64
+		lineageTag: 5da284d9-cdf0-4fd6-aea0-666d54b08994
+		summarizeBy: sum
+		sourceColumn: rotational_speed_rpm
+
+		annotation SummarizationSetBy = Automatic
+
+	column tool_wear_min
+		dataType: int64
+		lineageTag: 2abc4696-6cd4-4e4e-bbff-d9c989b66d41
+		summarizeBy: sum
+		sourceColumn: tool_wear_min
+
+		annotation SummarizationSetBy = Automatic
+
+	column twf
+		dataType: boolean
+		lineageTag: 5faf0dcc-5535-4768-b621-bd1c80f415ed
+		summarizeBy: none
+		sourceColumn: twf
+
+	column hdf
+		dataType: boolean
+		lineageTag: 3c5f535c-51e4-4d65-a419-2f3a0867ef08
+		summarizeBy: none
+		sourceColumn: hdf
+
+	column pwf
+		dataType: boolean
+		lineageTag: 18598222-dcd1-427d-913f-5c8e71c9bb66
+		summarizeBy: none
+		sourceColumn: pwf
+
+	column osf
+		dataType: boolean
+		lineageTag: eda374b0-147b-4cb8-8b14-b9a86f13cf44
+		summarizeBy: none
+		sourceColumn: osf
+
+	column rnf
+		dataType: boolean
+		lineageTag: ee6b9b7c-f34c-43ce-a85b-fce11be026c5
+		summarizeBy: none
+		sourceColumn: rnf
+
+	column fecha_carga_utc
+		dataType: dateTime
+		lineageTag: a80f5b4a-e5e0-45c5-8f3a-17ef90cbf0ad
+		summarizeBy: none
+		sourceColumn: fecha_carga_utc
+
+		variation Variation
+			isDefault
+			relationship: 27562066-563d-4743-b759-2f71ebd302ca
+			defaultHierarchy: LocalDateTable_c22efb04-1225-4f3d-9eeb-4a11b57cac3b.'Jerarquía de fechas'
+
+	column carga_id
+		dataType: string
+		lineageTag: 01bf4b9f-8476-498f-b88a-27b981a491d1
+		summarizeBy: none
+		sourceColumn: carga_id
+
+	partition fact_operacion = m
+		mode: import
+		source =
+				let
+				    Origen = Sql.Database(ServidorSQL, BaseDatosSQL, [CreateNavigationProperties=false]),
+				    Tabla = Origen{[Schema="dm",Item="fact_operacion"]}[Data]
+				in
+				    Tabla
