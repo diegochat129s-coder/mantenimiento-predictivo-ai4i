@@ -1,0 +1,384 @@
+{
+  "name": "MantenimientoPredictivo",
+  "compatibilityLevel": 1600,
+  "model": {
+    "culture": "es-MX",
+    "defaultPowerBIDataSourceVersion": "powerBI_V3",
+    "sourceQueryCulture": "es-MX",
+    "expressions": [
+      {
+        "name": "ServidorSQL",
+        "kind": "m",
+        "expression": "\".\\SQLEXPRESS\" meta [IsParameterQuery=true, Type=\"Text\", IsParameterQueryRequired=true]"
+      },
+      {
+        "name": "BaseDatosSQL",
+        "kind": "m",
+        "expression": "\"MantenimientoPredictivoDM\" meta [IsParameterQuery=true, Type=\"Text\", IsParameterQueryRequired=true]"
+      }
+    ],
+    "tables": [
+      {
+        "name": "fact_operacion",
+        "columns": [
+          {
+            "name": "udi",
+            "dataType": "int64",
+            "sourceColumn": "udi",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "product_id",
+            "dataType": "string",
+            "sourceColumn": "product_id",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "tipo_id",
+            "dataType": "int64",
+            "sourceColumn": "tipo_id",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "estado_id",
+            "dataType": "int64",
+            "sourceColumn": "estado_id",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "tiempo_id",
+            "dataType": "int64",
+            "sourceColumn": "tiempo_id",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "air_temperature_k",
+            "dataType": "double",
+            "sourceColumn": "air_temperature_k",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "process_temperature_k",
+            "dataType": "double",
+            "sourceColumn": "process_temperature_k",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "torque_nm",
+            "dataType": "double",
+            "sourceColumn": "torque_nm",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "rotational_speed_rpm",
+            "dataType": "int64",
+            "sourceColumn": "rotational_speed_rpm",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "tool_wear_min",
+            "dataType": "int64",
+            "sourceColumn": "tool_wear_min",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "twf",
+            "dataType": "boolean",
+            "sourceColumn": "twf",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "hdf",
+            "dataType": "boolean",
+            "sourceColumn": "hdf",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "pwf",
+            "dataType": "boolean",
+            "sourceColumn": "pwf",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "osf",
+            "dataType": "boolean",
+            "sourceColumn": "osf",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "rnf",
+            "dataType": "boolean",
+            "sourceColumn": "rnf",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "fecha_carga_utc",
+            "dataType": "dateTime",
+            "sourceColumn": "fecha_carga_utc",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "carga_id",
+            "dataType": "string",
+            "sourceColumn": "carga_id",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "fact_operacion",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Origen = Sql.Database(ServidorSQL, BaseDatosSQL, [CreateNavigationProperties=false]),",
+                "    Tabla = Origen{[Schema=\"dm\",Item=\"fact_operacion\"]}[Data]",
+                "in",
+                "    Tabla"
+              ]
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "Observaciones",
+            "expression": "COUNTROWS(fact_operacion)",
+            "formatString": "#,0"
+          },
+          {
+            "name": "Fallas",
+            "expression": "SUM(fact_operacion[estado_id])",
+            "formatString": "#,0"
+          },
+          {
+            "name": "Porcentaje de fallas",
+            "expression": "DIVIDE([Fallas], [Observaciones], 0)",
+            "formatString": "0.00%"
+          },
+          {
+            "name": "Torque promedio",
+            "expression": "AVERAGE(fact_operacion[torque_nm])",
+            "formatString": "0.00 \"Nm\""
+          },
+          {
+            "name": "Desgaste promedio",
+            "expression": "AVERAGE(fact_operacion[tool_wear_min])",
+            "formatString": "0.00 \"min\""
+          },
+          {
+            "name": "Temperatura promedio",
+            "expression": "AVERAGE(fact_operacion[process_temperature_k])",
+            "formatString": "0.00 \"K\""
+          }
+        ]
+      },
+      {
+        "name": "dim_tipo",
+        "columns": [
+          {
+            "name": "tipo_id",
+            "dataType": "int64",
+            "sourceColumn": "tipo_id",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "tipo",
+            "dataType": "string",
+            "sourceColumn": "tipo",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "calidad",
+            "dataType": "string",
+            "sourceColumn": "calidad",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "dim_tipo",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Origen = Sql.Database(ServidorSQL, BaseDatosSQL, [CreateNavigationProperties=false]),",
+                "    Tabla = Origen{[Schema=\"dm\",Item=\"dim_tipo\"]}[Data]",
+                "in",
+                "    Tabla"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "dim_estado",
+        "columns": [
+          {
+            "name": "estado_id",
+            "dataType": "int64",
+            "sourceColumn": "estado_id",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "descripcion",
+            "dataType": "string",
+            "sourceColumn": "descripcion",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "dim_estado",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Origen = Sql.Database(ServidorSQL, BaseDatosSQL, [CreateNavigationProperties=false]),",
+                "    Tabla = Origen{[Schema=\"dm\",Item=\"dim_estado\"]}[Data]",
+                "in",
+                "    Tabla"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "dim_tiempo",
+        "columns": [
+          {
+            "name": "tiempo_id",
+            "dataType": "int64",
+            "sourceColumn": "tiempo_id",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "fecha",
+            "dataType": "dateTime",
+            "sourceColumn": "fecha",
+            "summarizeBy": "none",
+            "isKey": true,
+            "formatString": "dd/MM/yyyy"
+          },
+          {
+            "name": "anio",
+            "dataType": "int64",
+            "sourceColumn": "anio",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "trimestre",
+            "dataType": "int64",
+            "sourceColumn": "trimestre",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "mes",
+            "dataType": "int64",
+            "sourceColumn": "mes",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "mes_nombre",
+            "dataType": "string",
+            "sourceColumn": "mes_nombre",
+            "summarizeBy": "none",
+            "sortByColumn": "mes"
+          },
+          {
+            "name": "anio_mes",
+            "dataType": "string",
+            "sourceColumn": "anio_mes",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "dia",
+            "dataType": "int64",
+            "sourceColumn": "dia",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "dia_semana",
+            "dataType": "int64",
+            "sourceColumn": "dia_semana",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "dia_nombre",
+            "dataType": "string",
+            "sourceColumn": "dia_nombre",
+            "summarizeBy": "none",
+            "sortByColumn": "dia_semana"
+          },
+          {
+            "name": "es_fin_semana",
+            "dataType": "boolean",
+            "sourceColumn": "es_fin_semana",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "es_fecha_simulada",
+            "dataType": "boolean",
+            "sourceColumn": "es_fecha_simulada",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "dim_tiempo",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Origen = Sql.Database(ServidorSQL, BaseDatosSQL, [CreateNavigationProperties=false]),",
+                "    Tabla = Origen{[Schema=\"dm\",Item=\"dim_tiempo\"]}[Data]",
+                "in",
+                "    Tabla"
+              ]
+            }
+          }
+        ],
+        "dataCategory": "Time",
+        "description": "Calendario 2026. Fechas de operación simuladas: 50 observaciones por día desde el 1 de enero."
+      }
+    ],
+    "relationships": [
+      {
+        "name": "operacion_tipo",
+        "fromTable": "fact_operacion",
+        "fromColumn": "tipo_id",
+        "toTable": "dim_tipo",
+        "toColumn": "tipo_id",
+        "fromCardinality": "many",
+        "toCardinality": "one",
+        "crossFilteringBehavior": "oneDirection",
+        "isActive": true
+      },
+      {
+        "name": "operacion_estado",
+        "fromTable": "fact_operacion",
+        "fromColumn": "estado_id",
+        "toTable": "dim_estado",
+        "toColumn": "estado_id",
+        "fromCardinality": "many",
+        "toCardinality": "one",
+        "crossFilteringBehavior": "oneDirection",
+        "isActive": true
+      },
+      {
+        "name": "operacion_tiempo",
+        "fromTable": "fact_operacion",
+        "fromColumn": "tiempo_id",
+        "toTable": "dim_tiempo",
+        "toColumn": "tiempo_id",
+        "fromCardinality": "many",
+        "toCardinality": "one",
+        "crossFilteringBehavior": "oneDirection",
+        "isActive": true
+      }
+    ]
+  }
+}

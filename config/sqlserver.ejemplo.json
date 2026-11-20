@@ -1,0 +1,7 @@
+{
+  "servidor": ".\\SQLEXPRESS",
+  "base": "MantenimientoPredictivoDM",
+  "cifrar": true,
+  "confiar_certificado_local": false,
+  "python": "python.exe"
+}

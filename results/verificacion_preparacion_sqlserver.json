@@ -1,0 +1,17 @@
+{
+  "verificado_utc": "2026-11-20T08:50:07.847628+00:00",
+  "pruebas_python_aprobadas": 3,
+  "notebook_celdas_ejecutadas_sin_error": 6,
+  "powershell_archivos_sintaxis_correcta": 3,
+  "tablas_powerbi": 4,
+  "relaciones_powerbi": 3,
+  "visuales_powerbi": 9,
+  "validacion_powerbi_en_este_script": "Referencias de campos y relaciones; no apertura de Desktop.",
+  "sha256_original": "dc6630cd9b1f0f853922fad78a1b6436570d3f1ec863f1dd5c4340ac56bc8a8e",
+  "filas_procesadas": 10000,
+  "fallas": 339,
+  "dias_simulados_utilizados": 200,
+  "fecha_simulada_inicial": "2026-01-01",
+  "fecha_simulada_final": "2026-07-19",
+  "alcance": "Comprobaciones locales; no ejecuta SQL Server, SSIS ni Power BI Desktop."
+}

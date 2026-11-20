@@ -1,5 +1,7 @@
 # Avance del Proyecto Integrador de Recursamiento
 
+**Actualización del 20 de noviembre:** se preparó la migración a SQL Server con dimensión de tiempo simulada, carga FULL transaccional, generador de paquete SSIS y proyecto Power BI. La transformación Python está comprobada; la ejecución SQL/SSIS y la apertura de Power BI están pendientes de instalación/configuración. Ver [guía de presentación](GUIA_PRESENTACION.md) e [instrucciones de instalación](INSTALACION_SQLSERVER_SSIS_POWERBI.md). Los archivos y resultados de SQLite descritos abajo documentan la etapa anterior.
+
 **Diego Salinas Laguna · Mantenimiento predictivo de maquinaria industrial**
 
 | Evidencia | Ubicación |

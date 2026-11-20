@@ -3,3 +3,11 @@ __pycache__/
 .venv-jupyter/
 .ipynb_checkpoints/
 *.pyc
+config/sqlserver.local.json
+data/processed/sqlserver/
+results/sqlserver/
+powerbi/**/.pbi/
+ssis/*.dtsx
+*.dtproj.user
+*.suo
+.vs/

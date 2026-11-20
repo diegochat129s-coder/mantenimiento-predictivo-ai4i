@@ -1,6 +1,32 @@
 # Mantenimiento predictivo de maquinaria industrial
 
-**Autor:** Diego Salinas Laguna. **Corte:** 27 de octubre de 2026.
+**Autor:** Diego Salinas Laguna. **Actualización:** 20 de noviembre de 2026.
+
+## Etapa actual: SQL Server, SSIS y Power BI
+
+El proyecto incorpora una nueva implementación del Data Mart en **SQL Server**, con modelo estrella y dimensiones de tipo, estado y tiempo. La carga **FULL** prepara los datos, carga staging, reemplaza hechos y dimensiones dentro de una transacción y verifica los conteos. El historial de cargas permanece disponible.
+
+Las fechas son **simuladas**: 50 observaciones por día desde el 1 de enero de 2026, según UDI. El original no se modifica. Hay 200 días con datos y un calendario de 365 días. El análisis por mes sirve para la práctica y no representa estacionalidad real.
+
+**Comienza aquí:** [guía para presentar](docs/GUIA_PRESENTACION.md) y [configuración y ejecución](docs/INSTALACION_SQLSERVER_SSIS_POWERBI.md).
+
+| Parte nueva | Ubicación |
+|---|---|
+| Notebook de transformación ejecutado | `notebooks/02_ETL_SQLServer.ipynb` |
+| Datos derivados con fechas | `data/processed/ai4i_fechas_simuladas.csv` |
+| Preparación y validación | `src/etl_sqlserver.py` |
+| Tablas y procedimiento FULL | `sql/sqlserver/` |
+| Ejecución completa | `scripts/sqlserver/Datamart.ps1` |
+| Generador del paquete SSIS | `ssis/Crear_Paquete.ps1` |
+| Proyecto Power BI con conexión SQL | `powerbi/Mantenimiento.pbip` y sus dos carpetas asociadas |
+| Pruebas de transformación | `tests/test_etl_sqlserver.py` |
+| Informe de arquitectura y estado | [PDF](docs/Informe_SQLServer_SSIS_PowerBI.pdf) |
+
+**Estado:** preparación Python comprobada y estructura Power BI validada. La ejecución del procedimiento en SQL Server, la generación/ejecución de SSIS y la apertura/actualización de Power BI siguen pendientes de disponer de esos programas y configurar una instancia real. El `.dtsx` se genera localmente mediante el SDK de SSIS. El paquete coordina tareas Execute Process con Python y PowerShell/SqlBulkCopy; no usa componentes de Data Flow.
+
+Para repetir las comprobaciones locales: `python scripts/verificar_entrega.py`. Esta verificación comprueba Python, los archivos derivados, la sintaxis de PowerShell y las relaciones del proyecto Power BI; no sustituye la ejecución de SQL Server/SSIS/Desktop.
+
+La implementación SQLite y el dashboard HTML que aparecen a continuación corresponden a la etapa previa. Sus resultados se conservan; no acreditan la ejecución de la nueva implementación en SQL Server.
 
 Proyecto académico con AI4I 2020. Este paquete continúa la Actividad 0 y la Unidad I y reúne las evidencias de las Unidades II y III del calendario proporcionado. El informe principal está en `reports/Diego_Salinas_Unidades_II_III.pdf` y su versión editable en Word en la misma carpeta.
 
@@ -58,7 +84,7 @@ El PDF se exporta desde Word; no se regenera automáticamente con los comandos a
 
 ## Data Mart y trazabilidad
 
-Grano: una observación por UDI. Dimensiones de tipo de producto y estado general; tabla de hechos con medidas de operación y tipos de falla. No se inventan fechas ni identificadores de máquinas. El ETL reconstruye sus propias tablas y comprueba integridad referencial. Las consultas del Data Mart son descriptivas; no intervienen en la selección de modelos.
+En la implementación previa de SQLite, el grano es una observación por UDI. Tiene dimensiones de tipo de producto y estado general y una tabla de hechos con mediciones e indicadores de falla. Esta versión previa no contiene dimensión temporal. La nueva implementación SQL Server agrega `dim_tiempo` y fechas expresamente simuladas, como se explica al inicio. Ninguna de las versiones convierte UDI en un identificador de máquina. Las consultas del Data Mart son descriptivas; no intervienen en la selección de modelos.
 
 El CSV original permanece en `data/raw`. Su SHA-256 se registra en `results/auditoria.json`. Los resultados de comprobación están en `results/verificacion.json`. La exploración que orienta modelos usa entrenamiento; la revisión de calidad y las consultas de carga describen todo el archivo.
 
