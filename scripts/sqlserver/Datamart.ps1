@@ -14,6 +14,7 @@ $settings = Get-Content -LiteralPath $Config -Raw -Encoding UTF8 | ConvertFrom-J
 if ($settings.base -notmatch '^[A-Za-z][A-Za-z0-9_]{0,63}$') { throw 'Nombre de base inválido.' }
 if ($settings.base -in @('master','model','msdb','tempdb')) { throw 'Se requiere una base de proyecto.' }
 Add-Type -AssemblyName System.Data
+. (Join-Path $PSScriptRoot 'Convertir_Staging.ps1')
 $builder = New-Object System.Data.SqlClient.SqlConnectionStringBuilder
 $builder['Data Source'] = $settings.servidor
 $builder['Integrated Security'] = $true
@@ -74,14 +75,7 @@ if ($Paso -in @('Staging','Todo')) {
     $manifest = $run.Manifest
     $records = @(Import-Csv -LiteralPath (Join-Path $run.Directory 'staging.csv') -Encoding UTF8)
     if ($records.Count -ne 10000) { throw 'El CSV preparado debe tener 10000 filas.' }
-    $table = New-Object System.Data.DataTable
-    foreach ($property in $records[0].PSObject.Properties.Name) { [void]$table.Columns.Add($property,[string]) }
-    foreach ($record in $records) {
-        if ($record.carga_id -ne $manifest.carga_id) { throw 'La fila pertenece a otra ejecución.' }
-        $row = $table.NewRow()
-        foreach ($column in $table.Columns) { $row[$column.ColumnName] = $record.($column.ColumnName) }
-        $table.Rows.Add($row)
-    }
+    $table = ConvertTo-StagingTable -Records $records -CargaId ([Guid]$manifest.carga_id)
     $connection = Open-Database $settings.base
     $transaction = $connection.BeginTransaction()
     $bulk = New-Object System.Data.SqlClient.SqlBulkCopy($connection,[System.Data.SqlClient.SqlBulkCopyOptions]::CheckConstraints,$transaction)

@@ -84,6 +84,8 @@ Esta alternativa ejecuta el ETL completo desde PowerShell; no constituye evidenc
 
 ## Comprobación del FULL
 
+Se corrigió la preparación de staging para enviar `carga_id` como `System.Guid` en el DataTable, compatible con `uniqueidentifier` de SQL Server. El resto de columnas conserva su contrato textual de staging. La prueba `tests/test_staging.ps1` comprobó las 10,000 filas preparadas, sus identificadores y el rechazo de cargas ajenas; es una prueba de conversión local, no una ejecución SQL. Para repetirla, preparar primero los archivos con `python src/etl_sqlserver.py` y ejecutar `powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\tests\test_staging.ps1`.
+
 Después de ejecutar, abrir SSMS y seleccionar `MantenimientoPredictivoDM`. Ejecutar `sql/sqlserver/03_consultas_presentacion.sql`. Revisar:
 
 | Comprobación | Resultado esperado |
