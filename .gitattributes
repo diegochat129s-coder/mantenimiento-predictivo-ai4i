@@ -1,0 +1,2 @@
+# Conservar exactamente los bytes del dataset original, incluidos sus saltos de línea.
+data/raw/ai4i2020.csv -text

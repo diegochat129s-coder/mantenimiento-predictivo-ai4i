@@ -24,7 +24,7 @@ Abrir la carpeta completa en Visual Studio Code y usar su terminal PowerShell. S
 Set-Location 'C:\Users\diego\AppData\Local\Temp\AI4I_GitHub_20261116'
 ```
 
-Para conservar el proyecto fuera de Temp, se recomienda mover o clonar el repositorio a una carpeta de proyectos antes de configurar SSIS. El paquete generado guarda rutas del equipo: si se mueve la carpeta, se debe volver a generar.
+La copia de trabajo actual está en la ruta anterior. Antes de configurar SSIS, se recomienda copiar o clonar el proyecto a una carpeta permanente del usuario. El paquete generado guarda rutas del equipo: si se mueve la carpeta, se debe volver a generar. No se pudo crear automáticamente la carpeta permanente alternativa por falta de permisos de escritura.
 
 Primero confirmar en SSMS el nombre del servidor al que realmente se puede conectar. `.\SQLEXPRESS` es solo el ejemplo predeterminado, no un servidor detectado. Puede ser `localhost`, `localhost\NOMBRE` u otro nombre instalado. La cuenta de Windows debe poder crear la base del proyecto o el administrador debe prepararla y conceder permisos.
 
@@ -54,7 +54,7 @@ Desde **Windows PowerShell 5.1**, con el runtime/SDK de SSIS instalado:
 .\ssis\Crear_Paquete.ps1
 ```
 
-Se genera `ssis/AI4I_Carga_Full.dtsx` y se vuelve a leer para comprobar que contiene cinco tareas y cuatro conexiones de precedencia. El generador busca `Microsoft.SqlServer.ManagedDTS.dll` en las carpetas estándar de SQL Server; también acepta `-ManagedDts 'ruta completa de la DLL'` si se instaló en otro lugar. Utilizar la versión correspondiente al diseñador; no descargar DLL sueltas.
+Se genera `ssis/AI4I_Carga_Full.dtsx` y se vuelve a leer para comprobar que contiene cinco tareas y cuatro conexiones de precedencia. Una vez ejecutado y revisado, se debe agregar también este archivo al repositorio como evidencia. El generador busca `Microsoft.SqlServer.ManagedDTS.dll` en las carpetas estándar de SQL Server; también acepta `-ManagedDts 'ruta completa de la DLL'` si se instaló en otro lugar. Utilizar la versión correspondiente al diseñador; no descargar DLL sueltas.
 
 En Visual Studio, crear un proyecto **Integration Services Project** y configurar TargetServerVersion compatible con el runtime. En **SSIS Packages**, elegir **Add Existing Package → File System**, seleccionar el `.dtsx` generado y ejecutarlo. Las cinco tareas son:
 

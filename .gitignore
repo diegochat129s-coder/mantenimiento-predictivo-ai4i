@@ -7,7 +7,6 @@ config/sqlserver.local.json
 data/processed/sqlserver/
 results/sqlserver/
 powerbi/**/.pbi/
-ssis/*.dtsx
 *.dtproj.user
 *.suo
 .vs/
